@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CONVERSOR — Meus Livros</title>
+    <title>CONVERSOR SIMPLES — Texto → EPUB</title>
     <meta name="theme-color" content="#0066FF">
 
-    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/epub-gen-memory@1.0.2/dist/index.umd.min.js"></script>
 
     <style>
@@ -17,284 +16,180 @@
             font-family: sans-serif;
             color: white;
             padding: 16px;
-            overflow-x: hidden;
         }
 
-        .cabecalho {
-            text-align: center;
-            margin-bottom: 20px;
+        .caixa {
+            max-width: 600px;
+            margin: 0 auto;
         }
+
         h1 {
-            font-size: 20px;
-            color: #66ddff;
-            margin-bottom: 6px;
-        }
-        .sub {
-            font-size: 12px;
-            color: #88aacc;
-        }
-
-        .aviso-seguranca {
-            background: rgba(0, 150, 80, 0.12);
-            border: 1px solid #00cc66;
-            border-radius: 10px;
-            padding: 10px 12px;
-            margin-bottom: 18px;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #aaffcc;
-        }
-
-        .area-arquivo {
-            border: 2px dashed #0088cc;
-            border-radius: 14px;
-            padding: 30px 15px;
             text-align: center;
+            color: #66ddff;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .campo {
             margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(0, 40, 80, 0.3);
         }
-        .area-arquivo:active {
-            border-color: #00ddff;
-            background: rgba(0, 100, 150, 0.4);
-        }
-        .area-arquivo p {
-            font-size: 14px;
+
+        label {
+            display: block;
             color: #aaddff;
-        }
-        .area-arquivo .pequeno {
-            font-size: 11px;
-            color: #6688aa;
-            margin-top: 6px;
+            margin-bottom: 6px;
+            font-size: 14px;
         }
 
-        input[type="file"] { display: none; }
-
-        .info-arquivo {
-            background: rgba(0, 60, 120, 0.3);
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #0088cc;
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #cce4ff;
-            display: none;
+            background: rgba(0, 30, 60, 0.8);
+            color: white;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 250px;
+            resize: vertical;
         }
 
         .botao {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: linear-gradient(90deg, #008844, #00aa55);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-bottom: 12px;
-        }
-        .botao:disabled {
-            background: #333;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .passos {
-            margin-top: 15px;
-            display: none;
-        }
-        .passo {
-            padding: 8px 12px;
-            margin: 6px 0;
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
-            font-size: 13px;
-            color: #888;
-        }
-        .passo.ok { color: #00ff88; background: rgba(0,255,136,0.08); }
-        .passo.erro { color: #ff6666; background: rgba(255,68,68,0.08); }
-
-        .botao-voltar {
-            background: transparent;
-            border: 1px solid #0088cc;
-            color: #66ddff;
             margin-top: 10px;
+        }
+
+        .botao:hover { opacity: 0.9; }
+
+        .botao-limpar {
+            background: linear-gradient(90deg, #cc4400, #ee6622);
+            margin-top: 8px;
+        }
+
+        .aviso {
+            background: rgba(0, 100, 200, 0.1);
+            border: 1px solid #0088cc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #aaddff;
+            line-height: 1.5;
+        }
+
+        .sucesso {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0, 200, 100, 0.15);
+            border: 1px solid #00cc66;
+            border-radius: 8px;
+            color: #88ffbb;
+            display: none;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<div class="cabecalho">
-    <h1>📚 CONVERSOR DE LIVROS</h1>
-    <p class="sub">Converte Word → EPUB · Tudo no seu aparelho</p>
-</div>
+<div class="caixa">
+    <h1>📚 CONVERSOR DE TEXTO PARA EPUB</h1>
 
-<div class="aviso-seguranca">
-    🔒 <strong>SEGURANÇA TOTAL:</strong> Seu livro NÃO é enviado para nenhum servidor.<br>
-    A conversão acontece aqui, dentro do seu celular. Ninguém vê, ninguém copia.
-</div>
+    <div class="aviso">
+        ✅ <strong>Como usar:</strong><br>
+        1. Escreva ou cole o nome do livro<br>
+        2. Cole o texto do livro na caixa grande<br>
+        3. Toque em <strong>GERAR EPUB</strong> → baixa pronto!
+    </div>
 
-<div class="area-arquivo" id="areaArquivo">
-    <p>📂 Toque para escolher o arquivo</p>
-    <p class="pequeno">Arquivos suportados: .docx (Word) · .txt (Texto)</p>
-    <input type="file" id="entradaArquivo" accept=".docx,.txt">
-</div>
+    <div class="campo">
+        <label>📖 Nome do Livro</label>
+        <input type="text" id="nomeLivro" placeholder="Digite o nome do livro...">
+    </div>
 
-<div class="info-arquivo" id="infoArquivo">
-    <strong>📄 Arquivo:</strong> <span id="nomeArquivo"></span><br>
-    <strong>📦 Tamanho:</strong> <span id="tamanhoArquivo"></span>
-</div>
+    <div class="campo">
+        <label>✍️ Texto do Livro — COLE AQUI</label>
+        <textarea id="textoLivro" placeholder="Cole o texto do seu livro aqui...&#10;&#10;Cada parágrafo vai aparecer certinho no EPUB."></textarea>
+    </div>
 
-<button class="botao" id="botaoConverter" disabled>🔄 CONVERTER PARA EPUB</button>
-<a href="index.html" style="text-decoration:none;"><button class="botao botao-voltar">↩️ VOLTAR</button></a>
+    <button class="botao" onclick="criarEPUB()">📦 GERAR EPUB</button>
+    <button class="botao botao-limpar" onclick="limparTudo()">🗑️ LIMPAR TUDO</button>
 
-<div class="passos" id="caixaPassos">
-    <div class="passo" id="passo1">📄 Lendo o arquivo...</div>
-    <div class="passo" id="passo2">✍️ Preparando conteúdo...</div>
-    <div class="passo" id="passo3">📦 Gerando EPUB...</div>
-    <div class="passo" id="passo4">✅ Pronto! Baixando...</div>
+    <div class="sucesso" id="mensagemSucesso">
+        ✅ EPUB CRIADO COM SUCESSO! 🎉<br>
+        O download começou automaticamente!
+    </div>
 </div>
 
 <script>
-const areaArquivo = document.getElementById('areaArquivo');
-const entradaArquivo = document.getElementById('entradaArquivo');
-const infoArquivo = document.getElementById('infoArquivo');
-const nomeArquivoEl = document.getElementById('nomeArquivo');
-const tamanhoArquivoEl = document.getElementById('tamanhoArquivo');
-const botaoConverter = document.getElementById('botaoConverter');
-const caixaPassos = document.getElementById('caixaPassos');
+async function criarEPUB() {
+    const nome = document.getElementById('nomeLivro').value.trim();
+    const texto = document.getElementById('textoLivro').value.trim();
 
-let arquivoSelecionado = null;
-let conteudoHtml = '';
-let tituloLivro = 'Meu Livro';
-
-// Clica para escolher arquivo
-areaArquivo.addEventListener('click', () => entradaArquivo.click());
-
-// Arquivo escolhido
-entradaArquivo.addEventListener('change', async (e) => {
-    arquivoSelecionado = e.target.files[0];
-    if (!arquivoSelecionado) return;
-
-    // Mostra informações
-    nomeArquivoEl.textContent = arquivoSelecionado.name;
-    tamanhoArquivoEl.textContent = (arquivoSelecionado.size / 1024).toFixed(1) + ' KB';
-    infoArquivo.style.display = 'block';
-
-    // Tira a extensão do nome = título do livro
-    tituloLivro = arquivoSelecionado.name.replace(/\.(docx|txt)$/i, '');
-
-    // Lê o arquivo
-    const extensao = arquivoSelecionado.name.toLowerCase().split('.').pop();
-
-    if (extensao === 'txt') {
-        const leitor = new FileReader();
-        leitor.onload = (evento) => {
-            const texto = evento.target.result;
-            conteudoHtml = `
-                <html>
-                <head><meta charset="UTF-8"><title>${tituloLivro}</title></head>
-                <body style="font-size: 1.1em; line-height: 1.6; text-align: justify;">
-                    ${texto.replace(/\n/g, '<br>')}
-                </body>
-                </html>`;
-            botaoConverter.disabled = false;
-        };
-        leitor.readAsText(arquivoSelecionado);
+    if (!nome) {
+        alert('⚠️ Digite o nome do livro!');
+        document.getElementById('nomeLivro').focus();
+        return;
     }
-    else if (extensao === 'docx') {
-        const leitor = new FileReader();
-        leitor.onload = async (evento) => {
-            try {
-                const resultado = await mammoth.convertToHtml({ arrayBuffer: evento.target.result });
-                conteudoHtml = `
-                    <html>
-                    <head><meta charset="UTF-8"><title>${tituloLivro}</title></head>
-                    <body style="font-size: 1.1em; line-height: 1.6; text-align: justify;">
-                        ${resultado.value}
-                    </body>
-                    </html>`;
-                botaoConverter.disabled = false;
-            } catch (erro) {
-                alert('❌ Erro ao ler o arquivo: ' + erro.message);
-            }
-        };
-        leitor.readAsArrayBuffer(arquivoSelecionado);
+
+    if (!texto) {
+        alert('⚠️ Cole o texto do livro na caixa!');
+        document.getElementById('textoLivro').focus();
+        return;
     }
-});
 
-// Converter para EPUB
-botaoConverter.addEventListener('click', async () => {
-    if (!conteudoHtml) return;
-
-    caixaPassos.style.display = 'block';
-    resetarPassos();
+    // Transforma o texto em formato de livro
+    const paragrafos = texto.split('\n').filter(p => p.trim() !== '');
+    const htmlConteudo = paragrafos.map(p => `<p style="text-align: justify; margin-bottom: 1em; font-size: 1.1em; line-height: 1.6;">${p}</p>`).join('');
 
     try {
-        // Passo 1
-        marcarPasso(1, true);
-        await esperar(400);
-
-        // Passo 2
-        marcarPasso(2, true);
-        await esperar(400);
-
-        // Passo 3 — GERAR O EPUB
-        marcarPasso(3, true);
-        
+        // Cria o EPUB
         const { epub } = await EpubGenMemory({
-            title: tituloLivro,
-            author: 'Autor',
-            publisher: 'Meu Projeto',
-            content: [ conteudoHtml ],
-            verbose: false
+            title: nome,
+            author: 'Meu Livro',
+            content: [
+                `<html><body>${htmlConteudo}</body></html>`
+            ]
         });
 
-        // Passo 4 — BAIXAR
-        marcarPasso(4, true);
-
+        // Baixa o arquivo
         const blob = new Blob([epub], { type: 'application/epub+zip' });
         const url = URL.createObjectURL(blob);
         
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${tituloLivro}.epub`;
+        link.download = `${nome}.epub`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        alert('✅ EPUB GERADO COM SUCESSO!\n\nSalvo com o nome: ' + tituloLivro + '.epub');
+        // Mostra mensagem de sucesso
+        document.getElementById('mensagemSucesso').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('mensagemSucesso').style.display = 'none';
+        }, 5000);
 
     } catch (erro) {
-        marcarPasso(1, false);
-        marcarPasso(2, false);
-        marcarPasso(3, false);
-        marcarPasso(4, false);
-        alert('❌ Erro: ' + erro.message + '\n\n💡 Dica: abra o arquivo no Word e salve como .docx novamente.');
-    }
-});
-
-function marcarPasso(num, ok) {
-    const el = document.getElementById('passo' + num);
-    if (ok) {
-        el.classList.add('ok');
-        el.textContent = '✅ ' + el.textContent.slice(2);
-    } else {
-        el.classList.add('erro');
-        el.textContent = '❌ ' + el.textContent.slice(2);
+        alert('❌ Erro: ' + erro.message);
     }
 }
 
-function resetarPassos() {
-    for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById('passo' + i);
-        el.classList.remove('ok', 'erro');
-    }
-}
-
-function esperar(ms) {
-    return new Promise(r => setTimeout(r, ms));
+function limparTudo() {
+    document.getElementById('nomeLivro').value = '';
+    document.getElementById('textoLivro').value = '';
+    document.getElementById('mensagemSucesso').style.display = 'none';
+    document.getElementById('nomeLivro').focus();
 }
 </script>
+
 </body>
 </html>
