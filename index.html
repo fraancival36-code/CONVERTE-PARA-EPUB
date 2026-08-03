@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CONVERSOR SIMPLES — Texto → EPUB</title>
+    <title>📚 ANDRÔMEDA STUDIO — Livro · Áudio · Exportar</title>
     <meta name="theme-color" content="#0066FF">
 
     <script src="https://cdn.jsdelivr.net/npm/epub-gen-memory@1.0.2/dist/index.umd.min.js"></script>
@@ -11,185 +11,308 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
-            width: 100%; height: 100%;
-            background: #050515;
-            font-family: sans-serif;
-            color: white;
-            padding: 16px;
+            width: 100%; min-height: 100vh;
+            background: linear-gradient(180deg, #050515 0%, #0a1929 100%);
+            font-family: sans-serif; color: white; padding: 12px;
         }
 
-        .caixa {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .caixa { max-width: 620px; margin: 0 auto; }
 
         h1 {
-            text-align: center;
-            color: #66ddff;
-            margin-bottom: 20px;
-            font-size: 20px;
+            text-align: center; color: #66ddff;
+            margin-bottom: 4px; font-size: 20px;
+        }
+        .sub {
+            text-align: center; color: #88aacc;
+            font-size: 12px; margin-bottom: 16px;
         }
 
-        .campo {
-            margin-bottom: 15px;
+        .abas { display: flex; gap: 8px; margin-bottom: 15px; }
+        .aba {
+            flex: 1; padding: 10px 6px; border: none; border-radius: 10px;
+            background: rgba(0,60,120,0.4); color: #aaddff;
+            font-size: 13px; cursor: pointer; transition: 0.25s;
         }
-
-        label {
-            display: block;
-            color: #aaddff;
-            margin-bottom: 6px;
-            font-size: 14px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #0088cc;
-            border-radius: 8px;
-            background: rgba(0, 30, 60, 0.8);
-            color: white;
-            font-size: 14px;
-        }
-
-        textarea {
-            min-height: 250px;
-            resize: vertical;
-        }
-
-        .botao {
-            width: 100%;
-            padding: 15px;
+        .aba.ativa {
             background: linear-gradient(90deg, #008844, #00aa55);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
+            color: white; font-weight: bold;
         }
 
-        .botao:hover { opacity: 0.9; }
+        .painel { display: none; }
+        .painel.visivel { display: block; }
 
-        .botao-limpar {
-            background: linear-gradient(90deg, #cc4400, #ee6622);
-            margin-top: 8px;
+        .campo { margin-bottom: 14px; }
+        label {
+            display: block; color: #aaddff;
+            margin-bottom: 6px; font-size: 14px;
+        }
+        input, textarea {
+            width: 100%; padding: 12px; border: 1px solid #0088cc;
+            border-radius: 8px; background: rgba(0,30,60,0.8);
+            color: white; font-size: 14px;
+        }
+        textarea {
+            min-height: 220px; resize: vertical;
+            line-height: 1.6;
         }
 
         .aviso {
-            background: rgba(0, 100, 200, 0.1);
-            border: 1px solid #0088cc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #aaddff;
-            line-height: 1.5;
+            background: rgba(0,100,200,0.1); border: 1px solid #0088cc;
+            border-radius: 8px; padding: 10px; margin-bottom: 14px;
+            font-size: 13px; color: #aaddff; line-height: 1.5;
         }
 
-        .sucesso {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(0, 200, 100, 0.15);
-            border: 1px solid #00cc66;
-            border-radius: 8px;
-            color: #88ffbb;
-            display: none;
+        .botao {
+            width: 100%; padding: 14px; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: bold; cursor: pointer;
+            margin-top: 8px; transition: 0.2s;
+        }
+        .botao:hover { opacity: 0.92; }
+
+        .botao-epub { background: linear-gradient(90deg, #0066aa, #0088dd); color: white; }
+        .botao-audio { background: linear-gradient(90deg, #aa4400, #ee7700); color: white; }
+        .botao-parar { background: #333; color: #ccc; margin-top: 6px; }
+        .botao-tudo { background: linear-gradient(90deg, #008844, #00cc66); color: white; margin-top: 12px; }
+
+        .preview {
+            background: #000; border: 2px solid #0088cc; border-radius: 10px;
+            padding: 20px; margin-top: 12px; min-height: 100px;
+            color: #aaddff; font-size: 15px; line-height: 1.7;
             text-align: center;
         }
+
+        .mensagem {
+            margin-top: 12px; padding: 12px; border-radius: 8px;
+            display: none; text-align: center; font-size: 14px;
+        }
+        .sucesso { background: rgba(0,200,100,0.15); border: 1px solid #00cc66; color: #88ffbb; }
     </style>
 </head>
 <body>
 
 <div class="caixa">
-    <h1>📚 CONVERSOR DE TEXTO PARA EPUB</h1>
+    <h1>📚 ANDRÔMEDA STUDIO</h1>
+    <p class="sub">Livro · Áudio · Exportar Tudo</p>
 
-    <div class="aviso">
-        ✅ <strong>Como usar:</strong><br>
-        1. Escreva ou cole o nome do livro<br>
-        2. Cole o texto do livro na caixa grande<br>
-        3. Toque em <strong>GERAR EPUB</strong> → baixa pronto!
+    <div class="abas">
+        <button class="aba ativa" onclick="mostrarAba('livro')">📖 Livro</button>
+        <button class="aba" onclick="mostrarAba('audio')">🎙️ Áudio</button>
+        <button class="aba" onclick="mostrarAba('tudo')">📤 Exportar</button>
     </div>
 
-    <div class="campo">
-        <label>📖 Nome do Livro</label>
-        <input type="text" id="nomeLivro" placeholder="Digite o nome do livro...">
+    <!-- ABA 1: LIVRO -->
+    <div class="painel visivel" id="painel-livro">
+        <div class="aviso">
+            ✅ Escreva ou cole seu texto → toque em GERAR LIVRO → baixa o EPUB pronto!
+        </div>
+
+        <div class="campo">
+            <label>📖 Título do Livro</label>
+            <input type="text" id="titulo" placeholder="Digite o título...">
+        </div>
+
+        <div class="campo">
+            <label>✍️ Texto Completo</label>
+            <textarea id="texto" placeholder="Cole o texto do seu livro aqui..."></textarea>
+        </div>
+
+        <button class="botao botao-epub" onclick="gerarEPUB()">📖 GERAR LIVRO EPUB</button>
+        <div class="mensagem sucesso" id="msgEPUB">✅ LIVRO CRIADO! Baixando...</div>
     </div>
 
-    <div class="campo">
-        <label>✍️ Texto do Livro — COLE AQUI</label>
-        <textarea id="textoLivro" placeholder="Cole o texto do seu livro aqui...&#10;&#10;Cada parágrafo vai aparecer certinho no EPUB."></textarea>
+    <!-- ABA 2: ÁUDIO / NARRAÇÃO -->
+    <div class="painel" id="painel-audio">
+        <div class="aviso">
+            🎙️ O texto será narrado em voz natural. Você pode parar quando quiser.
+        </div>
+
+        <div class="campo">
+            <label>📝 Texto para Narrar</label>
+            <textarea id="textoAudio" placeholder="Cole o texto aqui..."></textarea>
+        </div>
+
+        <div class="preview" id="cenaAudio">
+            A voz vai narrar e o texto aparece aqui<br>como cena, parágrafo por parágrafo 🎙️
+        </div>
+
+        <button class="botao botao-audio" onclick="narrar()">🎙️ OUVIR NARRAÇÃO</button>
+        <button class="botao botao-parar" onclick="parar()">🔇 PARAR</button>
+        <div class="mensagem sucesso" id="msgAudio">✅ NARRAÇÃO CONCLUÍDA!</div>
     </div>
 
-    <button class="botao" onclick="criarEPUB()">📦 GERAR EPUB</button>
-    <button class="botao botao-limpar" onclick="limparTudo()">🗑️ LIMPAR TUDO</button>
+    <!-- ABA 3: EXPORTAR TUDO -->
+    <div class="painel" id="painel-tudo">
+        <div class="aviso">
+            📤 COPIA TUDO DE UMA VEZ!<br>
+            Gera o livro EPUB e prepara o texto para áudio e vídeo.
+        </div>
 
-    <div class="sucesso" id="mensagemSucesso">
-        ✅ EPUB CRIADO COM SUCESSO! 🎉<br>
-        O download começou automaticamente!
+        <div class="campo">
+            <label>📖 Título do Projeto</label>
+            <input type="text" id="tituloTudo" placeholder="Digite o título...">
+        </div>
+
+        <div class="campo">
+            <label>✍️ Texto Completo</label>
+            <textarea id="textoTudo" placeholder="Cole o texto do seu livro aqui..."></textarea>
+        </div>
+
+        <button class="botao botao-tudo" onclick="exportarTudo()">📤 GERAR LIVRO + PREPARAR ÁUDIO</button>
+        <div class="mensagem sucesso" id="msgTudo">✅ TUDO PRONTO! Livro baixado e texto copiado!</div>
     </div>
 </div>
 
 <script>
-async function criarEPUB() {
-    const nome = document.getElementById('nomeLivro').value.trim();
-    const texto = document.getElementById('textoLivro').value.trim();
+// ==================================================
+// 🎯 SISTEMA DE ABAS
+// ==================================================
+function mostrarAba(nome) {
+    document.querySelectorAll('.aba').forEach(b => b.classList.remove('ativa'));
+    document.querySelectorAll('.painel').forEach(p => p.classList.remove('visivel'));
+    event.target.classList.add('ativa');
+    document.getElementById('painel-' + nome).classList.add('visivel');
+}
 
-    if (!nome) {
-        alert('⚠️ Digite o nome do livro!');
-        document.getElementById('nomeLivro').focus();
+// ==================================================
+// 📖 GERAR LIVRO EPUB
+// ==================================================
+async function gerarEPUB() {
+    const titulo = document.getElementById('titulo').value.trim();
+    const texto = document.getElementById('texto').value.trim();
+
+    if (!titulo || !texto) {
+        alert('⚠️ Preencha o título e o texto!');
         return;
     }
 
-    if (!texto) {
-        alert('⚠️ Cole o texto do livro na caixa!');
-        document.getElementById('textoLivro').focus();
-        return;
-    }
-
-    // Transforma o texto em formato de livro
     const paragrafos = texto.split('\n').filter(p => p.trim() !== '');
-    const htmlConteudo = paragrafos.map(p => `<p style="text-align: justify; margin-bottom: 1em; font-size: 1.1em; line-height: 1.6;">${p}</p>`).join('');
+    const html = paragrafos.map(p =>
+        `<p style="text-align:justify; margin-bottom:1em; font-size:1.1em; line-height:1.6em; text-indent:1.5em;">${p}</p>`
+    ).join('');
 
     try {
-        // Cria o EPUB
         const { epub } = await EpubGenMemory({
-            title: nome,
-            author: 'Meu Livro',
-            content: [
-                `<html><body>${htmlConteudo}</body></html>`
-            ]
+            title: titulo,
+            author: 'Francival Alves Farias',
+            publisher: 'Andrômeda Studio',
+            content: [`<html><body style="padding:5%; font-family:serif;">${html}</body></html>`]
         });
 
-        // Baixa o arquivo
         const blob = new Blob([epub], { type: 'application/epub+zip' });
         const url = URL.createObjectURL(blob);
-        
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${nome}.epub`;
+        link.download = `${titulo.replace(/\W+/g, '-')}.epub`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        // Mostra mensagem de sucesso
-        document.getElementById('mensagemSucesso').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('mensagemSucesso').style.display = 'none';
-        }, 5000);
+        mostrarMsg('msgEPUB');
 
     } catch (erro) {
         alert('❌ Erro: ' + erro.message);
     }
 }
 
-function limparTudo() {
-    document.getElementById('nomeLivro').value = '';
-    document.getElementById('textoLivro').value = '';
-    document.getElementById('mensagemSucesso').style.display = 'none';
-    document.getElementById('nomeLivro').focus();
+// ==================================================
+// 🎙️ NARRAR TEXTO
+// ==================================================
+let narrando = null;
+
+function narrar() {
+    const texto = document.getElementById('textoAudio').value.trim();
+    const cena = document.getElementById('cenaAudio');
+
+    if (!texto) {
+        alert('⚠️ Cole o texto para narrar!');
+        return;
+    }
+
+    parar();
+    const paragrafos = texto.split('\n').filter(p => p.trim() !== '');
+    let indice = 0;
+
+    function falarParte() {
+        if (indice >= paragrafos.length) {
+            cena.innerHTML = '✅ Narração concluída!';
+            mostrarMsg('msgAudio');
+            return;
+        }
+
+        const parte = paragrafos[indice].trim();
+        indice++;
+        cena.innerHTML = `<em>Parte ${indice}:</em><br><br>${parte}`;
+
+        const fala = new SpeechSynthesisUtterance(parte);
+        fala.lang = 'pt-BR';
+        fala.rate = 1.15;
+        fala.pitch = 1.05;
+        fala.onend = () => setTimeout(falarParte, 600);
+        narrando = fala;
+        window.speechSynthesis.speak(fala);
+    }
+
+    falarParte();
+}
+
+function parar() {
+    window.speechSynthesis.cancel();
+    narrando = null;
+    document.getElementById('cenaAudio').innerHTML = '✅ Pronto para começar de novo';
+}
+
+// ==================================================
+// 📤 EXPORTAR TUDO
+// ==================================================
+async function exportarTudo() {
+    const titulo = document.getElementById('tituloTudo').value.trim();
+    const texto = document.getElementById('textoTudo').value.trim();
+
+    if (!titulo || !texto) {
+        alert('⚠️ Preencha o título e o texto!');
+        return;
+    }
+
+    // Copia para as outras abas também
+    document.getElementById('titulo').value = titulo;
+    document.getElementById('texto').value = texto;
+    document.getElementById('textoAudio').value = texto;
+
+    // Gera o EPUB
+    const paragrafos = texto.split('\n').filter(p => p.trim() !== '');
+    const html = paragrafos.map(p =>
+        `<p style="text-align:justify; margin-bottom:1em; font-size:1.1em; line-height:1.6em; text-indent:1.5em;">${p}</p>`
+    ).join('');
+
+    try {
+        const { epub } = await EpubGenMemory({
+            title: titulo,
+            author: 'Francival Alves Farias',
+            publisher: 'Andrômeda Studio',
+            content: [`<html><body style="padding:5%; font-family:serif;">${html}</body></html>`]
+        });
+
+        const blob = new Blob([epub], { type: 'application/epub+zip' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${titulo.replace(/\W+/g, '-')}.epub`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        mostrarMsg('msgTudo');
+
+    } catch (erro) {
+        alert('❌ Erro: ' + erro.message);
+    }
+}
+
+function mostrarMsg(id) {
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 6000);
 }
 </script>
-
 </body>
 </html>
